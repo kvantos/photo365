@@ -14,6 +14,7 @@ header = ["Subject", "Start date", "All Day Event"]
 with open('words.txt', "r") as ff:
     words = ff.read()
     words = words.split('\n')
+    words.remove('')
 
 
 def generate_month(month):
@@ -25,8 +26,7 @@ def generate_month(month):
         words_selected.add(words[digit])
 
     day = 1
-    message = ",".join(header)
-    message += "\n"
+    message = ""
     for word in words_selected:
         date = "%02d/%s/%s" % (day, month, YEAR)
         message += "%s,%s,%s\n" % (word, date, "True")
@@ -35,7 +35,11 @@ def generate_month(month):
     return message
 
 
-cal = generate_month(12)
+cal = ",".join(header)
+cal += "\n"
+# cal += generate_month(12)
+for month in range(1, 13):
+    cal += generate_month(month)
 
 with open("photo365_calendar_%i.csv" % YEAR, "w+") as cc:
     cc.write(cal)

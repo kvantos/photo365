@@ -838,7 +838,6 @@ household
 housing
 huge
 human
-humor
 hungry
 hurt
 hypothesis
@@ -1455,12 +1454,6 @@ resort
 resource
 respect
 respond
-respondent
-response
-responsibility
-rest
-restaurant
-restore
 restriction
 result
 retain

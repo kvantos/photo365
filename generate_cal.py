@@ -6,32 +6,41 @@ Generate CSV file for importing to Google Calendar
 """
 
 import random
-from calendar import monthrange
+from calendar import monthrange, isleap
+import pickle
 
-YEAR = 2017
-header = ["Subject", "Start date", "All Day Event"]
+YEAR = 2018
 
-with open('words.txt', "r") as ff:
-    words = ff.read()
-    words = words.split('\n')
-    words.remove('')
+if isleap(YEAR):
+    num_days = 366
+else:
+    num_days = 365
+
+header = ["Subject", "Start date", "All Day Event", "Description"]
+
+with open('dict_data.bin', "rb") as ff:
+    words = pickle.load(ff)
+
+words_list = list(words)
+random.shuffle(words_list)
+words_selected = words_list[:num_days]
 
 
 def generate_month(month):
     week, days = monthrange(YEAR, month)
-    
-    words_selected = set()
-    while len(words_selected) < days:
-        digit = random.randrange(0, len(words))
-        words_selected.add(words[digit])
+    global words_selected
 
     day = 1
     message = ""
-    for word in words_selected:
+    while day <= days:
+        word = words_selected.pop(-1)
+        definition = words[word]
+        definition = definition.strip('\'')
+        definition = definition.replace("\"", "\'")
         date = "%02d/%s/%s" % (day, month, YEAR)
-        message += "%s,%s,%s\n" % (word, date, "True")
+        message += "%s,%s,%s,\"%s\"\n" % (word.upper(), date, "True", definition)
         day += 1
-            
+
     return message
 
 
@@ -39,6 +48,7 @@ cal = ",".join(header)
 cal += "\n"
 # cal += generate_month(12)
 for month in range(1, 13):
+    print("Generate %i month" % month)
     cal += generate_month(month)
 
 with open("photo365_calendar_%i.csv" % YEAR, "w+") as cc:

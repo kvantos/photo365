@@ -26,7 +26,7 @@ def word_getter():
     while True:
         con = Connection("dict.org")
         db = Database(con, "wn")
-
+#        db = Database(con, "fd-eng-rus")
         word = q.get()
         if word is None:
             break
